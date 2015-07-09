@@ -12,7 +12,6 @@ require('dotenv').load();
 var db = require('monk')(process.env.MONGOLAB_URI);
 var usersCollection = db.get('userInfo');
 
-
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -42,9 +41,8 @@ passport.use(new LinkedInStrategy({
     state: true
   },
   function(accessToken, refreshToken, profile, done) {
-    // console.log(profile);
-    usersCollection.update({id: profile.id},{id: profile.id, displayName: profile.displayName}, {upsert: true});
-    done(null, {id: profile.id, displayName: profile.displayName, token: accessToken})
+    usersCollection.update({id: profile.id},{id: profile.id, site: 'linkedin', displayName: profile.displayName, token: accessToken}, {upsert: true});
+    done(null, {id: profile.id})
   }
 ));
 
